@@ -32,7 +32,7 @@ void	*ft_array(size_t count)
 void	*ft_array_push(void *ary, void *ptr)
 {
 	t_array	*ary_tmp;
-	void	*tmp;
+	void	**tmp;
 
 	ary_tmp = ary;
 	if (!ary_tmp)

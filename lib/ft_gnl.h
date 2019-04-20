@@ -13,24 +13,26 @@
 #ifndef FT_GNL_H
 # define FT_GNL_H
 
-# define BUFF_SIZE 4096
-# define ERROR(e) ((ssize_t)(*line = 0) + e)
 # include <unistd.h>
+# define BUFF_SIZE 256
+# define ERROR(e) ((ssize_t)(*line = 0) + e)
 
-typedef struct	s_gnl
-{
-	int				fd;
-	char			buff[BUFF_SIZE];
-	ssize_t			i;
-	ssize_t			size;
-	struct s_gnl	*next;
-}				t_gnl;
+typedef struct s_gnl	t_gnl;
+typedef struct s_gnls	t_gnls;
 
-typedef struct	s_gnl_res
+struct	s_gnls
 {
-	t_gnl	*gnl;
-	char	*ptr;
-	ssize_t	len;
-}				t_gnl_res;
+	t_gnl	**gnl;
+	size_t	len;
+	size_t	max;
+};
+
+struct	s_gnl
+{
+	int		fd;
+	ssize_t	i;
+	ssize_t	size;
+	char	buff[BUFF_SIZE];
+};
 
 #endif

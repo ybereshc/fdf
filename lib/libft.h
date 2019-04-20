@@ -21,7 +21,6 @@
 # include <stddef.h>
 # include "ft_list.h"
 # include "ft_array.h"
-# include "ft_hashtbl.h"
 # include "ft_process.h"
 
 # ifndef __uint128_t
@@ -143,16 +142,9 @@ void		**ft_list_to_array(t_list *list);
 ** Array
 */
 void		*ft_array(size_t n);
+void		*ft_any_array(size_t count, size_t n);
 void		*ft_array_push(void *ary, void *ptr);
 void		*ft_array_free(void *ary);
-
-/*
-** Hash Table
-*/
-void		*ft_hashtbl(size_t n);
-void		*ft_hashtbl_push(void *ary, char *key, void *ptr);
-void		*ft_hashtbl_get(void *ary, char *key);
-void		*ft_hashtbl_free(void *ary);
 
 /*
 ** Printf

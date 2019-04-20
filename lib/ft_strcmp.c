@@ -21,7 +21,7 @@ int8_t	ft_strncmp(char *s1, char *s2, size_t n)
 		s1++;
 		s2++;
 	}
-	return ((uint8_t)(*s1) - (uint8_t)(*s2));
+	return ((unsigned char)(*s1) - (unsigned char)(*s2));
 }
 
 int8_t	ft_strcmp(char *s1, char *s2)
