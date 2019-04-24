@@ -16,13 +16,13 @@ CC := gcc
 LIB := lib/
 LIBNAME := $(LIB)libft.a
 HEADERS := fdf.h
-FILES := main.c
+FILES := main.c render.c
 OBJS := $(FILES:.c=.o)
 
 all: $(NAME)
 
 $(NAME): mlib $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBNAME) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBNAME) -l mlx -framework OpenGL -framework AppKit -o $(NAME)
 	@echo "\\033[92m$(NAME) was created!\\033[0m"
 
 %.o: %.c $(HEADERS)

@@ -21,6 +21,7 @@
 # include <stddef.h>
 # include "ft_list.h"
 # include "ft_array.h"
+# include "ft_strsplit.h"
 # include "ft_process.h"
 
 # ifndef __uint128_t
@@ -74,6 +75,14 @@ char		*ft_strrchr(char *str, char chr);
 intptr_t	ft_strchri(char *str, char chr);
 intptr_t	ft_strrchri(char *str, char chr);
 size_t		ft_strchrcount(char *str, char chr);
+
+/*
+** Split
+*/
+t_split		*ft_strsplitany(char *str1, char *str2);
+t_split		*ft_strfsplitany(char *str1, char *str2);
+void		*ft_free_strsplit(t_split *split);
+
 char		**ft_strsplit(char *str, char chr);
 char		**ft_strfsplit(char *str, char chr);
 void		ft_free_strary(char **strary);
@@ -142,8 +151,8 @@ void		**ft_list_to_array(t_list *list);
 ** Array
 */
 void		*ft_array(size_t n);
-void		*ft_any_array(size_t count, size_t n);
 void		*ft_array_push(void *ary, void *ptr);
+void		*ft_array_split(void *array, size_t count);
 void		*ft_array_free(void *ary);
 
 /*

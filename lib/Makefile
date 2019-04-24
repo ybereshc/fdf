@@ -13,7 +13,7 @@
 NAME := libft.a
 CC := gcc
 CFLAGS := -Wall -Wextra -Werror -O3
-HEADERS := libft.h ft_gnl.h ft_list.h ft_array.h ft_process.h
+HEADERS := libft.h ft_gnl.h ft_list.h ft_array.h ft_process.h ft_strsplit.h
 HEADERS += $(addprefix ft_printf/, match.h parse.h)
 FILES := ft_print_memory.c ft_intlen.c ft_int_to_str.c ft_memcpy.c ft_memset.c \
          ft_pow.c ft_math.c ft_str_to_int.c ft_strcase.c ft_strchr.c \

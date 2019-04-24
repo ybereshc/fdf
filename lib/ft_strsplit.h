@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_array.h                                         :+:      :+:    :+:   */
+/*   ft_strsplit.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybereshc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,18 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ARRAY_H
-# define FT_ARRAY_H
+#ifndef FT_STRSPLIT_H
+# define FT_STRSPLIT_H
 
 # include "libft.h"
 
-typedef struct s_array	t_array;
+typedef struct s_split	t_split;
 
-struct	s_array
+struct	s_split
 {
-	void	**ptr;
+	char	**word;
 	size_t	len;
-	size_t	max;
 };
 
 #endif

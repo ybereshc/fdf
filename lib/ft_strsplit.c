@@ -11,65 +11,55 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
+#include "ft_strsplit.h"
 
-char	**ft_strsplit(char *str, char chr)
+static char	*split_pass(char *str1, char *str2)
 {
-	size_t	wc;
-	char	**res;
-	char	*tmp;
-
-	if (!str || !chr || !(wc = ft_strchrcount(str, chr)))
-		return (0);
-	if (!(res = ft_mlc(sizeof(char*) * (wc + 2))))
-		return (0);
-	wc = 0;
-	while (*str)
-	{
-		tmp = str;
-		while (*str && *str != chr)
-			str++;
-		res[wc] = ft_memcpy(ft_mlc(SIZE(char, str - tmp + 1)), tmp, str - tmp);
-		res[wc++][str - tmp] = '\0';
-		if (!*str)
-			break ;
-		str++;
-	}
-	res[wc] = 0;
-	return (res);
+	while (ft_strchr(str2, *str1))
+		str1++;
+	return (str1);
 }
 
-void	ft_free_strary(char **strary)
+t_split		*ft_strsplitany(char *str1, char *str2)
 {
-	char **tmp;
+	t_split	*res;
+	char	*beg;
 
-	tmp = strary;
-	if (!strary)
-		return ;
-	while (*strary)
-		free(*strary++);
-	free(tmp);
+	res = ft_array(10);
+	while (*(str1 = split_pass(str1, str2)))
+	{
+		beg = str1;
+		while (*str1 && !ft_strchr(str2, *str1))
+			str1++;
+		ft_array_push(res, ft_strndup(beg, str1 - beg));
+	}
+	return (ft_array_split(res, 0));
 }
 
-char	**ft_strfsplit(char *str, char chr)
+t_split		*ft_strfsplitany(char *str1, char *str2)
 {
-	size_t	wc;
-	char	**res;
+	t_split	*res;
+	char	*beg;
 
-	if (!str || !chr || !(wc = ft_strchrcount(str, chr)))
-		return (0);
-	if (!(res = ft_mlc(sizeof(char*) * (wc + 2))))
-		return (0);
-	wc = 0;
-	while (*str)
+	res = ft_array(1);
+	while (*(str1 = split_pass(str1, str2)))
 	{
-		res[wc++] = str;
-		while (*str && *str != chr)
-			str++;
-		if (!*str)
-			break ;
-		*str++ = '\0';
+		beg = str1;
+		while (*str1 && !ft_strchr(str2, *str1))
+			str1++;
+		ft_array_push(res, beg);
+		if (*str1)
+			*str1++ = '\0';
 	}
-	res[wc] = 0;
-	return (res);
+	return (ft_array_split(res, 0));
+}
+
+void	*ft_free_strsplit(t_split *split)
+{
+	size_t	i;
+
+	i = -1;
+	while (++i < split->len)
+		free(split->word[i]);
+	return (ft_array_free(split));
 }

@@ -29,33 +29,45 @@ void	*ft_array(size_t count)
 	return (res);
 }
 
-void	*ft_array_push(void *ary, void *ptr)
+void	*ft_array_push(void *array, void *ptr)
 {
-	t_array	*ary_tmp;
-	void	**tmp;
+	t_array	*ary;
 
-	ary_tmp = ary;
-	if (!ary_tmp)
+	if (!array)
 		return (0);
-	if (ary_tmp->len >= ary_tmp->max)
-	{
-		ary_tmp->max *= 3;
-		if (!(tmp = ft_mlc(SIZE(void*, ary_tmp->max))))
-			return (0);
-		ft_memcpy(tmp, ary_tmp->ptr, SIZE(void*, ary_tmp->len));
-		free(ary_tmp->ptr);
-		ary_tmp->ptr = tmp;
-	}
-	return (ary_tmp->ptr[ary_tmp->len++] = ptr);
+	ary = array;
+	if (ary->len >= ary->max && !(ft_array_split(ary, ary->max * 3)))
+		return (0);
+	return (ary->ptr[ary->len++] = ptr);
 }
 
-void	*ft_array_free(void *ary)
+void	*ft_array_split(void *array, size_t count)
 {
-	t_array	*ary_tmp;
+	t_array	*ary;
+	void	*tmp;
 
-	ary_tmp = ary;
-	if (ary_tmp && ary_tmp->ptr)
-		free(ary_tmp->ptr);
-	free(ary_tmp);
+	if (!array)
+		return (0);
+	ary = array;
+	if (!ary->len)
+		return (ft_array_free(ary));
+	if (count == ary->len)
+		return (array);
+	if (!count)
+		count = ary->len;
+	if (!(tmp = ft_mlc(SIZE(void*, count))))
+		return (0);
+	ft_memcpy(tmp, ary->ptr, SIZE(void*, count));
+	free(ary->ptr);
+	ary->ptr = tmp;
+	ary->max = count;
+	return (array);
+}
+
+void	*ft_array_free(void *array)
+{
+	if (array)
+		free(((t_array*)array)->ptr);
+	free(array);
 	return (0);
 }

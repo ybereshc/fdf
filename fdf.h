@@ -16,11 +16,50 @@
 # include "lib/libft.h"
 # include "options.h"
 
-# define E lem_error
-# define RT room_type
+typedef struct s_fdf	t_fdf;
+typedef struct s_mlx	t_mlx;
+typedef struct s_color	t_color;
+typedef struct s_vertex	t_vertex;
 
-typedef struct s_room	t_room;
+struct	s_color
+{
+	int8_t	r;
+	int8_t	g;
+	int8_t	b;
+};
 
-int	**g_map;
+struct	s_vertex
+{
+	t_color	color;
+	double	x;
+	double	y;
+	double	z;
+};
+
+struct s_point
+{
+	double	x;
+	double	y;
+	double	z;
+};
+
+struct	s_fdf
+{
+	t_vertex	**map;
+	int			x;
+	int			y;
+	int			space;
+};
+
+struct	s_mlx
+{
+	void	*ptr;
+	void	*win;
+};
+
+t_fdf	g_fdf;
+t_mlx	g_mlx;
+
+void	destructor(void) __attribute__((destructor(101)));
 
 #endif

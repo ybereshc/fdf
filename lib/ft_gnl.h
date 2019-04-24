@@ -24,7 +24,6 @@ struct	s_gnls
 {
 	t_gnl	**gnl;
 	size_t	len;
-	size_t	max;
 };
 
 struct	s_gnl
