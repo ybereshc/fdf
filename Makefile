@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    fdf                                                :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ybereshc <ybereshc@gmail.com>              +#+  +:+       +#+         #
+#    By: ybereshc <ybereshc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 19:35:04 by ybereshc          #+#    #+#              #
-#    Updated: 2018/11/06 19:35:08 by ybereshc         ###   ########.fr        #
+#    Updated: 2019/04/25 13:58:33 by ybereshc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC := gcc
 LIB := lib/
 LIBNAME := $(LIB)libft.a
 HEADERS := fdf.h
-FILES := main.c render.c
+FILES := main.c render.c print.c
 OBJS := $(FILES:.c=.o)
 
 all: $(NAME)

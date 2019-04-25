@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybereshc <ybereshc@gmail.com>              +#+  +:+       +#+        */
+/*   By: ybereshc <ybereshc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 19:16:24 by ybereshc          #+#    #+#             */
-/*   Updated: 2018/10/22 19:16:26 by ybereshc         ###   ########.fr       */
+/*   Updated: 2019/04/25 21:44:31 by ybereshc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,19 @@
 #  define BIG_PIECE __uint128_t
 # endif
 
-# define IF(a, b) if (a) b
-# define EF(a, b) else if (a) b
+/*
+** Math
+*/
+# define MAX(a,b) ({typeof(a) _a = (a); typeof(b) _b = (b); _a > _b ? _a : _b;})
+# define MIN(a,b) ({typeof(a) _a = (a); typeof(b) _b = (b); _a < _b ? _a : _b;})
+
+# define IF(a,b) if (a) b
+# define EF(a,b) else if (a) b
 # define EL(b) else b
 
-# define OR(a, b) (a ? a : b)
+# define OR(a,b) (a ? a : b)
 
-# define SIZE(type, n) sizeof(type) * (n)
+# define SIZE(type,n) sizeof(type) * (n)
 
 # define F ft_format
 # define W ft_printf

@@ -3,36 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybereshc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ybereshc <ybereshc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/10 20:34:44 by ybereshc          #+#    #+#             */
-/*   Updated: 2019/03/10 20:34:45 by ybereshc         ###   ########.fr       */
+/*   Created: 2019/04/25 13:47:58 by ybereshc          #+#    #+#             */
+/*   Updated: 2019/04/25 21:44:45 by ybereshc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./lib/libft.h"
 #include "fdf.h"
-#include <mlx.h>
 #include <fcntl.h>
 #include <unistd.h>
 
-void	destructor(void)
+void		destructor(void)
 {
-	system("leaks -q fdf");
-	// mlx_destroy_window(g_mlx.ptr, g_mlx.win);
+	if (g_win.ptr && g_win.win)
+		mlx_destroy_window(g_win.ptr, g_win.win);
+	// W("\e[91m");system("leaks -q fdf");W("\e[0m");
 }
 
-char	*read_file(char *file_path)
+char		*read_file(char *file_path)
 {
 	int		fd;
 	char	*res;
-	char	buff[1025];
+	char	buff[1024];
 	ssize_t	size;
 
 	if (!file_path || (fd = open(file_path, 0)) < 0)
 		return (0);
 	res = 0;
-	while ((size = read(fd, buff, 1024)) > 0)
+	while ((size = read(fd, buff, 1023)) > 0)
 	{
 		buff[size] = '\0';
 		res = ft_strfjoin(res, buff, 1);
@@ -40,69 +40,64 @@ char	*read_file(char *file_path)
 	return (res);
 }
 
-t_color	create_color(char *str)
+t_color		*create_color(char *str)
 {
-	t_color	res;
+	t_color	*res;
 	uint	color;
 
-	if (!str || (ft_strncmp(str, "0x", 2) && ft_strncmp(str, "0X", 2)) || ft_strlen(str + 2) != 6)
-		color = ft_str_to_uint(str + 2, 16);
-	else
+	if (!str || ft_strncmp(str, "0x", 2) || ft_strlen(str + 2) != 6)
 		color = 0xffffff;
-	res.r = color >> 16;
-	res.g = color >> 8;
-	res.b = color;
+	else
+		color = ft_str_to_uint(str + 2, 16);
+	res = ft_mlc(sizeof(t_color));
+	res->r = color >> 16;
+	res->g = color >> 8;
+	res->b = color;
 	return (res);
 }
 
-t_vertex	create_vertex(int x, int y, char *str)
+t_vertex	*create_vertex(int x, int y, char *str)
 {
-	t_vertex	res;
+	t_vertex	*res;
 	t_split		*vertex;
 
 	if (!(vertex = ft_strsplitany(str, ",")))
 		exit(0);
-	res.x = x;
-	res.y = y;
-	res.z = ft_atoi(vertex->word[0]);
-	if (vertex->len > 1)
-	{
-		res.color = create_color(vertex->word[1]);
-	}
-	printf("%f\n", res.z);
+	res = ft_mlc(sizeof(t_vertex));
+	res->x = g_map.m * x;
+	res->y = g_map.m * y;
+	res->z = ft_atoi(vertex->word[0]);
+	res->color = create_color(vertex->len > 1 ? vertex->word[1] : 0);
 	ft_free_strsplit(vertex);
 	return (res);
 }
 
-void	parse(char *data)
+void		parse(char *data)
 {
 	t_split	*row;
 	t_split	*col;
 	size_t	y;
 	size_t	x;
 
-	row = ft_strsplitany(data, "\n");
-	if (!row || !(g_fdf.y = row->len))
+	if (!(row = ft_strsplitany(data, "\n")) || !row->len)
 		exit(0);
-	col = ft_strsplitany(row->word[0], "\t ");
-	if (!col || !(g_fdf.x = col->len))
-		exit(0);
-	g_fdf.map = ft_memalloc(SIZE(t_vertex*, g_fdf.y));
+	g_map.y = row->len;
+	g_map.vtx = ft_array(1);
 	y = -1;
-	while (++y < g_fdf.y)
+	while (++y < row->len)
 	{
-		if (y && (!(col = ft_strsplitany(row->word[y], "\t ")) || col->len != g_fdf.x))
+		if (!(col = ft_strsplitany(row->word[y], "\t ")) && g_map.x && g_map.x != col->len)
 			exit(0);
-		g_fdf.map[y] = ft_memalloc(SIZE(t_vertex, g_fdf.x));
+		g_map.x = col->len;
 		x = -1;
-		while (++x < g_fdf.x)
-			g_fdf.map[y][x] = create_vertex(x, y, col->word[x]);
+		while (++x < col->len)
+			ft_array_push(g_map.vtx, create_vertex(x, y, col->word[x]));
 		ft_free_strsplit(col);
 	}
 	ft_free_strsplit(row);
 }
 
-int		hook(int key)
+int			hook(int key)
 {
 	W("key: [%zu]\n", key);
 	if (key == 53)
@@ -110,7 +105,12 @@ int		hook(int key)
 	return (0);
 }
 
-int		main(int argc, char **argv)
+
+// extern int __argc;
+// extern char ** __argv;
+// extern wchar_t ** __wargv
+
+int			main(int argc, char **argv)
 {
 	char	*data;
 
@@ -120,11 +120,14 @@ int		main(int argc, char **argv)
 	data = read_file(argv[1]);
 	parse(data);
 	free(data);
-	g_fdf.space = 100;
-	// printf("%f\n", g_fdf.map[1][1].z);
+
+	g_win.w = g_win.w ? g_win.w : WIN_WIDTH;
+	g_win.h = g_win.h ? g_win.h : WIN_HEIGHT;
+	g_win.m = g_win.m ? g_win.m : WIN_MARGIN;
+	g_map.m = MIN((g_win.w - g_win.m) / g_map.x, (g_win.h - g_win.m) / g_map.y);
 
 	// g_mlx.ptr = mlx_init();
-	// g_mlx.win = mlx_new_window(g_mlx.ptr, g_fdf.x * g_fdf.space, g_fdf.y * g_fdf.space, "XUI");
+	// g_mlx.win = mlx_new_window(g_mlx.ptr, WIDTH, HEIGHT, "FdF");
 	// mlx_hook(g_mlx.win, 2, 5, hook, data);
 	// mlx_hook(g_mlx.win, 17, 1L << 17, exit, 0);
 	// render();

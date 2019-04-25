@@ -1,27 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_array.h                                         :+:      :+:    :+:   */
+/*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybereshc <ybereshc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/19 12:42:29 by ybereshc          #+#    #+#             */
-/*   Updated: 2019/04/25 17:59:28 by ybereshc         ###   ########.fr       */
+/*   Created: 2019/04/25 13:54:01 by ybereshc          #+#    #+#             */
+/*   Updated: 2019/04/25 18:44:21 by ybereshc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ARRAY_H
-# define FT_ARRAY_H
+#include "./lib/libft.h"
+#include "fdf.h"
 
-# include "libft.h"
-
-typedef struct s_array	t_array;
-
-struct	s_array
+void	print_color(t_color *color)
 {
-	void	**ptr;
-	size_t	len;
-	size_t	max;
-};
+	printf("Color (red: %u, green: %u, blue: %u)", color->r, color->g, color->b);
+}
 
-#endif
+void	print_vertex(t_vertex *vertex)
+{
+	printf("Vertex (x: %.2f, y: %.2f, z: %.2f)", vertex->x, vertex->y, vertex->z);
+}

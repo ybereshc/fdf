@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   match.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybereshc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ybereshc <ybereshc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/19 12:40:50 by ybereshc          #+#    #+#             */
-/*   Updated: 2019/02/19 12:40:55 by ybereshc         ###   ########.fr       */
+/*   Updated: 2019/04/25 18:41:16 by ybereshc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@
 
 typedef	enum	e_flags
 {
-	minus = 1,
-	plus = 2,
-	space = 4,
-	hash = 8,
-	zero = 16,
-	split = 32,
-	to_free = 64,
+	minus = 1 << 0,
+	plus = 1 << 1,
+	space = 1 << 2,
+	hash = 1 << 3,
+	zero = 1 << 4,
+	split = 1 << 5,
+	to_free = 1 << 6,
 }				t_flags;
 
 typedef	enum	e_size

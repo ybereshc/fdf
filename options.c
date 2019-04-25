@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   options.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybereshc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ybereshc <ybereshc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/10 17:44:20 by ybereshc          #+#    #+#             */
-/*   Updated: 2019/03/10 17:44:22 by ybereshc         ###   ########.fr       */
+/*   Updated: 2019/04/25 21:38:44 by ybereshc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ void		lem_options(void)
 {
 	int	i;
 
-	g_l.ant_name = "L";
 	i = -1;
 	while (++i < g_process.argc)
 	{
