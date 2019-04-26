@@ -6,131 +6,103 @@
 /*   By: ybereshc <ybereshc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 13:47:58 by ybereshc          #+#    #+#             */
-/*   Updated: 2019/04/25 21:44:45 by ybereshc         ###   ########.fr       */
+/*   Updated: 2019/04/26 20:25:37 by ybereshc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./lib/libft.h"
 #include "fdf.h"
-#include <fcntl.h>
-#include <unistd.h>
 
 void		destructor(void)
 {
-	if (g_win.ptr && g_win.win)
-		mlx_destroy_window(g_win.ptr, g_win.win);
-	// W("\e[91m");system("leaks -q fdf");W("\e[0m");
+	W("\e[91m");system("leaks -q fdf");W("\e[0m");
 }
 
-char		*read_file(char *file_path)
+void		fdf_move(t_fdf *fdf, int key)
 {
-	int		fd;
-	char	*res;
-	char	buff[1024];
-	ssize_t	size;
+	size_t		y;
+	size_t		x;
 
-	if (!file_path || (fd = open(file_path, 0)) < 0)
-		return (0);
-	res = 0;
-	while ((size = read(fd, buff, 1023)) > 0)
-	{
-		buff[size] = '\0';
-		res = ft_strfjoin(res, buff, 1);
-	}
-	return (res);
-}
-
-t_color		*create_color(char *str)
-{
-	t_color	*res;
-	uint	color;
-
-	if (!str || ft_strncmp(str, "0x", 2) || ft_strlen(str + 2) != 6)
-		color = 0xffffff;
-	else
-		color = ft_str_to_uint(str + 2, 16);
-	res = ft_mlc(sizeof(t_color));
-	res->r = color >> 16;
-	res->g = color >> 8;
-	res->b = color;
-	return (res);
-}
-
-t_vertex	*create_vertex(int x, int y, char *str)
-{
-	t_vertex	*res;
-	t_split		*vertex;
-
-	if (!(vertex = ft_strsplitany(str, ",")))
-		exit(0);
-	res = ft_mlc(sizeof(t_vertex));
-	res->x = g_map.m * x;
-	res->y = g_map.m * y;
-	res->z = ft_atoi(vertex->word[0]);
-	res->color = create_color(vertex->len > 1 ? vertex->word[1] : 0);
-	ft_free_strsplit(vertex);
-	return (res);
-}
-
-void		parse(char *data)
-{
-	t_split	*row;
-	t_split	*col;
-	size_t	y;
-	size_t	x;
-
-	if (!(row = ft_strsplitany(data, "\n")) || !row->len)
-		exit(0);
-	g_map.y = row->len;
-	g_map.vtx = ft_array(1);
 	y = -1;
-	while (++y < row->len)
+	while (++y < fdf->y)
 	{
-		if (!(col = ft_strsplitany(row->word[y], "\t ")) && g_map.x && g_map.x != col->len)
-			exit(0);
-		g_map.x = col->len;
 		x = -1;
-		while (++x < col->len)
-			ft_array_push(g_map.vtx, create_vertex(x, y, col->word[x]));
-		ft_free_strsplit(col);
+		while (++x < fdf->x)
+		{
+			if (key == 126)
+				fdf->vtx[y][x].y -= 10;
+			if (key == 123)
+				fdf->vtx[y][x].x -= 10;
+			if (key == 125)
+				fdf->vtx[y][x].y += 10;
+			if (key == 124)
+				fdf->vtx[y][x].x += 10;
+		}
 	}
-	ft_free_strsplit(row);
 }
 
-int			hook(int key)
+int			hook(int key, t_fdf *fdf)
 {
 	W("key: [%zu]\n", key);
 	if (key == 53)
+	{
+		mlx_destroy_window(fdf->ptr, fdf->win);
 		exit(0);
+	}
+	clean(fdf);
+	if (key >= 123 && key <= 126)
+		fdf_move(fdf, key);
+	render(fdf);
 	return (0);
 }
 
+void		center(t_fdf *fdf)
+{
+	size_t	y;
+	size_t	x;
+	double	width;
+	double	height;
+	double	spase;
 
-// extern int __argc;
-// extern char ** __argv;
-// extern wchar_t ** __wargv
+	width = (fdf->width - WIN_PADDING * 2 - 1) / (fdf->x - 1);
+	height = (fdf->height - WIN_PADDING * 2 - 1) / (fdf->y - 1);
+	spase = MIN(width, height);
+	height = (fdf->height - (fdf->y - 1) * spase) / 2;
+	width = (fdf->width - (fdf->x - 1) * spase) / 2;
+	y = -1;
+	while (++y < fdf->y)
+	{
+		x = -1;
+		while (++x < fdf->x)
+		{
+			fdf->vtx[y][x].x = fdf->vtx[y][x].x * spase + width;
+			fdf->vtx[y][x].y = fdf->vtx[y][x].y * spase + height;
+		}
+	}
+}
 
 int			main(int argc, char **argv)
 {
 	char	*data;
+	t_fdf	fdf;
 
 	FT_INIT(MLC_ERROR | MLC_EXIT);
 	if (argc != 2)
 		D(2, "Usage\n");
-	data = read_file(argv[1]);
-	parse(data);
+	ft_bzero(&fdf, sizeof(t_fdf));
+	fdf.width = fdf.width ? fdf.width : WIN_WIDTH;
+	fdf.height = fdf.height ? fdf.height : WIN_HEIGHT;
+
+	data = read_file(&fdf, argv[1]);
+	parse(&fdf, data);
 	free(data);
 
-	g_win.w = g_win.w ? g_win.w : WIN_WIDTH;
-	g_win.h = g_win.h ? g_win.h : WIN_HEIGHT;
-	g_win.m = g_win.m ? g_win.m : WIN_MARGIN;
-	g_map.m = MIN((g_win.w - g_win.m) / g_map.x, (g_win.h - g_win.m) / g_map.y);
-
-	// g_mlx.ptr = mlx_init();
-	// g_mlx.win = mlx_new_window(g_mlx.ptr, WIDTH, HEIGHT, "FdF");
-	// mlx_hook(g_mlx.win, 2, 5, hook, data);
-	// mlx_hook(g_mlx.win, 17, 1L << 17, exit, 0);
-	// render();
-	// mlx_loop(g_mlx.ptr);
+	fdf.ptr = mlx_init();
+	fdf.win = mlx_new_window(fdf.ptr, fdf.width, fdf.height, "FdF");
+	mlx_hook(fdf.win, 2, 5, hook, &fdf);
+	mlx_hook(fdf.win, 17, 1L << 17, (int(*)())exit, &fdf);
+	center(&fdf);
+	render(&fdf);
+	mlx_loop(fdf.ptr);
 	return (0);
 }
